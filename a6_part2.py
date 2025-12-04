@@ -24,17 +24,20 @@ def load_and_explore_data(filename):
         pandas DataFrame containing the data
     """
     # TODO: Load the CSV file using pandas
-    
+    data = pd.read_csv(filename)
     # TODO: Print the first 5 rows
-    
+    print("=== Car Price Data ===")
+    print(f"\nFirst 5 rows:")
+    print(data.head())
     # TODO: Print the shape of the dataset
-    
+    print(f"\nDataset shape: {data.shape[0]} rows, {data.shape[1]} columns")
     # TODO: Print basic statistics for ALL columns
-    
+    print(f"\nBasic statistics:")
+    print(data.describe())
     # TODO: Print the column names
-    
+    print(f"\nColumn names: {list(data.columns)}")
     # TODO: Return the dataframe
-    pass
+    return data
 
 
 def visualize_features(data):
@@ -89,17 +92,19 @@ def prepare_features(data):
     """
     # TODO: Create a list of feature column names
     #       ['SquareFeet', 'Bedrooms', 'Bathrooms', 'Age']
-    
+    feature_columns = ['SquareFeet', 'Bedrooms', 'Bathrooms', 'Age']
     # TODO: Create X by selecting those columns from data
-    
+    X = data[feature_columns]
     # TODO: Create y by selecting the 'Price' column
-    
+    y = data['Price']
     # TODO: Print the shape of X and y
-    
+    print(f"\n=== Feature Preparation ===")
+    print(f"Features (X) shape: {X.shape}")
+    print(f"Target (y) shape: {y.shape}")
     # TODO: Print the feature column names
-    
+    print(f"\nFeature columns: {list(X.columns)}")
     # TODO: Return X and y
-    pass
+    return X, y 
 
 
 def split_data(X, y):
@@ -114,11 +119,14 @@ def split_data(X, y):
         X_train, X_test, y_train, y_test
     """
     # TODO: Split into train (80%) and test (20%) with random_state=42
-    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42)
     # TODO: Print how many samples are in training and testing sets
-    
+    print(f"\n=== Data Split (Matching Unplugged Activity) ===")
+    print(f"Training set: {len(X_train)} samples")
+    print(f"Testing set: {len(X_test)} samples")
     # TODO: Return X_train, X_test, y_train, y_test
-    pass
+    return X_train, X_test, y_train, y_test
+    
 
 
 def train_model(X_train, y_train, feature_names):
