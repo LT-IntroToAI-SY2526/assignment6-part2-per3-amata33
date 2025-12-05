@@ -48,35 +48,40 @@ def visualize_features(data):
         data: pandas DataFrame with features and Price
     """
     # TODO: Create a figure with 2x2 subplots, size (12, 10)
-    
+    plt.figure(figsize= (12, 10))
     # TODO: Add a main title: 'House Features vs Price'
-    
+    plt.title('House Features vs Price', fontsize=14, fontweight='bold')
+    plt.grid(True, alpha=0.6)
     # TODO: Plot 1 (top left): SquareFeet vs Price
     #       - scatter plot, color='blue', alpha=0.6
     #       - labels and title
     #       - grid
-    
+    plt.scatter(data['SquareFeet'], data['Price'], color= 'blue', alpha= 0.6)
+    plt.grid(True, alpha=0.6)
     # TODO: Plot 2 (top right): Bedrooms vs Price
     #       - scatter plot, color='green', alpha=0.6
     #       - labels and title
     #       - grid
-    
+    plt.scatter(data['Bedrooms'], data['Price'], color= 'green', alpha= 0.6)
+    plt.grid(True, alpha=0.6)
     # TODO: Plot 3 (bottom left): Bathrooms vs Price
     #       - scatter plot, color='red', alpha=0.6
     #       - labels and title
     #       - grid
-    
+    plt.scatter(data['Bathrooms'], data['Price'], color= 'red', alpha= 0.6)
+    plt.grid(True, alpha=0.6)
     # TODO: Plot 4 (bottom right): Age vs Price
     #       - scatter plot, color='orange', alpha=0.6
     #       - labels and title
     #       - grid
-    
+    plt.scatter(data['Age'], data['Price'], color= 'orange', alpha= 0.6)
+    plt.grid(True, alpha=0.6)
     # TODO: Use plt.tight_layout() to make plots fit nicely
-    
+    plt.tight_layout()
     # TODO: Save the figure as 'feature_plots.png' with dpi=300
-    
+    plt.savefig('feature_plots.png', dpi=300, bbox_inches='tight')
     # TODO: Show the plot
-    pass
+    
 
 
 def prepare_features(data):
@@ -142,18 +147,29 @@ def train_model(X_train, y_train, feature_names):
         trained LinearRegression model
     """
     # TODO: Create a LinearRegression model
-    
+    line = LinearRegression()
     # TODO: Train the model using fit()
-    
+    line.fit(X_train, y_train)
     # TODO: Print the intercept
-    
+    print(f"Intercept: ${line.intercept_:.2f}")
     # TODO: Print each coefficient with its feature name
     #       Hint: use zip(feature_names, model.coef_)
-    
+    print(f"\nCoefficients:")
+    for name, coef in zip(feature_names, line.coef_):
+        print(f"  {name}: {coef:.2f}")
     # TODO: Print the full equation in readable format
+    print(f"\nEquation:")
+    equation = f"Price = "
+    for i, (name, coef) in enumerate(zip(feature_names, line.coef_)):
+        if i == 0:
+            equation += f"{coef:.2f} × {name}"
+        else:
+            equation += f" + ({coef:.2f}) × {name}"
+    equation += f" + {line.intercept_:.2f}"
+    print(equation)
     
     # TODO: Return the trained model
-    pass
+    return line
 
 
 def evaluate_model(model, X_test, y_test, feature_names):
@@ -170,21 +186,28 @@ def evaluate_model(model, X_test, y_test, feature_names):
         predictions array
     """
     # TODO: Make predictions on X_test
-    
+    pred = model.predict(X_test)
     # TODO: Calculate R² score
-    
+    rsq = r2_score(y_test, pred)
     # TODO: Calculate MSE and RMSE
-    
+    mse = mean_squared_error(y_test, pred)
+    rmse = np.sqrt(mse)
     # TODO: Print R² score with interpretation
-    
+    print(f"R² Score: {rsq:.4f}")
+    print(f"  → Model explains {rsq*100:.2f}% of price variation")
     # TODO: Print RMSE with interpretation
-    
+    print(f"\nRoot Mean Squared Error: ${rmse:.2f}")
+    print(f"  → On average, predictions are off by ${rmse:.2f}")
     # TODO: Calculate and print feature importance
     #       Hint: Use np.abs(model.coef_) and sort by importance
     #       Show which features matter most
-    
+    ftim = list(zip(feature_names, np.abs(model.coef_)))
+    ftim.sort(key=lambda x: x[1], reverse=True)
     # TODO: Return predictions
-    pass
+    for i, (name, importance) in enumerate(ftim, 1):
+        print(f"{i}. {name}: {importance:.2f}")
+    
+    return pred
 
 
 def compare_predictions(y_test, predictions, num_examples=5):
@@ -204,7 +227,13 @@ def compare_predictions(y_test, predictions, num_examples=5):
     #       - Calculate error (actual - predicted)
     #       - Calculate percentage error
     #       - Print in a nice formatted table
-    pass
+    for i in range(min(num_examples, len(y_test))):
+        actual = y_test.iloc[i]
+        predicted = predictions[i]
+        error = actual - predicted
+        pct_error = (abs(error) / actual) * 100
+        
+        print(f"${actual:>13.2f}   ${predicted:>13.2f}   ${error:>10.2f}   {pct_error:>6.2f}%")
 
 
 def make_prediction(model, sqft, bedrooms, bathrooms, age):
@@ -223,9 +252,9 @@ def make_prediction(model, sqft, bedrooms, bathrooms, age):
     """
     # TODO: Create a DataFrame with the house features
     #       columns should be: ['SquareFeet', 'Bedrooms', 'Bathrooms', 'Age']
-    
+    drft = pd.DataFrame(['SquareFeet', 'Bedrooms', 'Bathrooms', 'Age'])
     # TODO: Make a prediction using model.predict()
-    
+    prediction = model.predict(drft)[0]
     # TODO: Print the house specs and predicted price nicely formatted
     
     # TODO: Return the predicted price
