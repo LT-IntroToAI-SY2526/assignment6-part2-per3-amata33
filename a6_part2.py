@@ -48,40 +48,57 @@ def visualize_features(data):
         data: pandas DataFrame with features and Price
     """
     # TODO: Create a figure with 2x2 subplots, size (12, 10)
-    plt.figure(figsize= (12, 10))
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
     # TODO: Add a main title: 'House Features vs Price'
-    plt.title('House Features vs Price', fontsize=14, fontweight='bold')
-    plt.grid(True, alpha=0.6)
+    fig.suptitle('House Features vs Price', fontsize=16, fontweight='bold')
     # TODO: Plot 1 (top left): SquareFeet vs Price
     #       - scatter plot, color='blue', alpha=0.6
     #       - labels and title
     #       - grid
-    plt.scatter(data['SquareFeet'], data['Price'], color= 'blue', alpha= 0.6)
-    plt.grid(True, alpha=0.6)
+    axes[0, 0].scatter(data['SquareFeet'], data['Price'], color= 'blue', alpha= 0.6)
+    axes[0, 0].set_xlabel('SquareFeet')
+    axes[0, 0].set_ylabel('Price ($)')
+    axes[0, 0].set_title('SquareFeet vs Price')
+    axes[0, 0].grid(True, alpha=0.6)
+
     # TODO: Plot 2 (top right): Bedrooms vs Price
     #       - scatter plot, color='green', alpha=0.6
     #       - labels and title
     #       - grid
-    plt.scatter(data['Bedrooms'], data['Price'], color= 'green', alpha= 0.6)
-    plt.grid(True, alpha=0.6)
+    axes[0, 1].scatter(data['Bedrooms'], data['Price'], color= 'green', alpha= 0.6)
+    axes[0, 1].set_xlabel('Bedrooms')
+    axes[0, 1].set_ylabel('Price ($)')
+    axes[0, 1].set_title('Bedrooms vs Price')
+    axes[0, 1].grid(True, alpha=0.6)
+
+
     # TODO: Plot 3 (bottom left): Bathrooms vs Price
     #       - scatter plot, color='red', alpha=0.6
     #       - labels and title
     #       - grid
-    plt.scatter(data['Bathrooms'], data['Price'], color= 'red', alpha= 0.6)
-    plt.grid(True, alpha=0.6)
+    axes[1, 0].scatter(data['Bathrooms'], data['Price'], color= 'red', alpha= 0.6)
+    axes[1, 0].set_xlabel('Bathrooms')
+    axes[1, 0].set_ylabel('Price ($)')
+    axes[1, 0].set_title('Bathrooms vs Price')
+    axes[1, 0].grid(True, alpha=0.6)
+
     # TODO: Plot 4 (bottom right): Age vs Price
     #       - scatter plot, color='orange', alpha=0.6
     #       - labels and title
     #       - grid
-    plt.scatter(data['Age'], data['Price'], color= 'orange', alpha= 0.6)
-    plt.grid(True, alpha=0.6)
+    axes[1, 1].scatter(data['Age'], data['Price'], color= 'orange', alpha= 0.6)
+    axes[1, 1].set_xlabel('Age')
+    axes[1, 1].set_ylabel('Price ($)')
+    axes[1, 1].set_title('Age vs Price')
+    axes[1, 1].grid(True, alpha=0.6)
+
     # TODO: Use plt.tight_layout() to make plots fit nicely
     plt.tight_layout()
     # TODO: Save the figure as 'feature_plots.png' with dpi=300
     plt.savefig('feature_plots.png', dpi=300, bbox_inches='tight')
     # TODO: Show the plot
-    
+    print("\n✓ Feature plots saved as 'feature_plots.png'")
+    plt.show()
 
 
 def prepare_features(data):
@@ -268,28 +285,29 @@ if __name__ == "__main__":
     
     # Step 1: Load and explore
     # TODO: Call load_and_explore_data() with 'house_prices.csv'
-    
+    data = load_and_explore_data('house_prices.csv')
     # Step 2: Visualize features
     # TODO: Call visualize_features() with the data
-    
+    visualize_features(data)
     # Step 3: Prepare features
     # TODO: Call prepare_features() and store X and y
-    
+    X, y = prepare_features(data)
     # Step 4: Split data
     # TODO: Call split_data() and store X_train, X_test, y_train, y_test
-    
+    X_train, X_test, y_train, y_test = split_data(X, y)
     # Step 5: Train model
     # TODO: Call train_model() with training data and feature names (X.columns)
-    
+    model = train_model(X_train, y_train, X.columns)
     # Step 6: Evaluate model
     # TODO: Call evaluate_model() with model, test data, and feature names
-    
+    evaluate = evaluate_model(model, X_test, y_test, X.columns)
     # Step 7: Compare predictions
     # TODO: Call compare_predictions() showing first 10 examples
-    
+    compare_predictions(y_test, evaluate)
     # Step 8: Make a new prediction
     # TODO: Call make_prediction() for a house of your choice
-    
+    make_prediction(model, 100, 4, 2, 100)
+
     print("\n" + "=" * 70)
     print("✓ Assignment complete! Check your saved plots.")
     print("Don't forget to complete a6_part2_writeup.md!")
