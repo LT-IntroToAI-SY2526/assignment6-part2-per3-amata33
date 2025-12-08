@@ -141,7 +141,7 @@ def split_data(X, y):
         X_train, X_test, y_train, y_test
     """
     # TODO: Split into train (80%) and test (20%) with random_state=42
-  
+    
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42)    
     # TODO: Print how many samples are in training and testing sets
     print(f"\n=== Data Split (Matching Unplugged Activity) ===")
@@ -169,6 +169,7 @@ def train_model(X_train, y_train, feature_names):
     # TODO: Train the model using fit()
     line.fit(X_train, y_train)
     # TODO: Print the intercept
+    print(f"\n=== Model Training Complete ===")
     print(f"Intercept: ${line.intercept_:.2f}")
     # TODO: Print each coefficient with its feature name
     #       Hint: use zip(feature_names, model.coef_)
@@ -180,9 +181,9 @@ def train_model(X_train, y_train, feature_names):
     equation = f"Price = "
     for i, (name, coef) in enumerate(zip(feature_names, line.coef_)):
         if i == 0:
-            equation += f"{coef:.2f} × {name}"
+            equation += f"{coef:.2f} x {name}"
         else:
-            equation += f" + ({coef:.2f}) × {name}"
+            equation += f" + ({coef:.2f}) x {name}"
     equation += f" + {line.intercept_:.2f}"
     print(equation)
     
@@ -211,6 +212,7 @@ def evaluate_model(model, X_test, y_test, feature_names):
     mse = mean_squared_error(y_test, pred)
     rmse = np.sqrt(mse)
     # TODO: Print R² score with interpretation
+    print(f"\n === Model Performance ===")
     print(f"R² Score: {rsq:.4f}")
     print(f"  → Model explains {rsq*100:.2f}% of price variation")
     # TODO: Print RMSE with interpretation
@@ -239,7 +241,9 @@ def compare_predictions(y_test, predictions, num_examples=5):
     """
     # TODO: Print a header row with columns:
     #       Actual Price, Predicted Price, Error, % Error
-    
+    print(f"\n=== Prediction Examples ===")
+    print(f"{'Actual Price':<15} {'Predicted Price':<18} {'Error':<12} {'% Error'}")
+    print("-" * 60)
     # TODO: For the first num_examples:
     #       - Get actual and predicted price
     #       - Calculate error (actual - predicted)
@@ -270,13 +274,16 @@ def make_prediction(model, sqft, bedrooms, bathrooms, age):
     """
     # TODO: Create a DataFrame with the house features
     #       columns should be: ['SquareFeet', 'Bedrooms', 'Bathrooms', 'Age']
-    drft = pd.DataFrame(['SquareFeet', 'Bedrooms', 'Bathrooms', 'Age'])
+    car_features = pd.DataFrame([[sqft, bedrooms, bathrooms, age ]], 
+    columns=['SqaureFeet', 'Bedrooms', 'Bathroom', 'Age'])
     # TODO: Make a prediction using model.predict()
-    prediction = model.predict(drft)[0]
+    prediction = model.predict(car_features)[0]
     # TODO: Print the house specs and predicted price nicely formatted
-    
+    print(f"\n=== New Prediction ===")
+    print(f"house specs: {sqft:.0f}ft^2, {bedrooms} #, {bathrooms} #, {age} #,")
+    print(f"Predicted price: ${prediction:,.2f}")
     # TODO: Return the predicted price
-    pass
+    return prediction
 
 
 if __name__ == "__main__":
@@ -307,7 +314,7 @@ if __name__ == "__main__":
     compare_predictions(y_test, evaluate)
     # Step 8: Make a new prediction
     # TODO: Call make_prediction() for a house of your choice
-    make_prediction(model, 100, 4, 2, 100)
+    make_prediction(model, 2000, 4, 2, 70)
 
     print("\n" + "=" * 70)
     print("✓ Assignment complete! Check your saved plots.")
