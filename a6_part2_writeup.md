@@ -31,9 +31,7 @@ Choose TWO features from your model and explain what their coefficients mean in 
 
 **Feature 1:**
 
-
 **Feature 2:**
-
 
 ---
 
@@ -42,7 +40,7 @@ Choose TWO features from your model and explain what their coefficients mean in 
 What was your model's R² score? What does this tell you about how well your model predicts house prices? Is there room for improvement?
 
 **YOUR ANSWER:**
-
+0.9936, this says that the model explains the near total of price variation. It is of course not perfect but it is extremely close.
 
 
 
